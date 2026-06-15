@@ -33,6 +33,12 @@
       inherit pkgs;
       masterServerDomain = "master-ut4.timiimit.com";
     };
+
+    # 5. launcher evaluates.
+    launcher = import ../pkgs/ut4-launcher.nix {
+      inherit pkgs;
+      masterServerDomain = "master-ut4.timiimit.com";
+    };
   in
   assert fetchOrasResult.outputHash == "0000000000000000000000000000000000000000000000000000";
   # Nix sanitizes colons in derivation names to hyphens.
@@ -41,6 +47,7 @@
   assert ut4Base.passthru.build == "xan-3525360";
   assert ut4UU.name == "ut4uu-v10.1.6";
   assert engineIni.name == "ut4-engine-ini-template";
+  assert launcher.name == "ut4-launcher";
   "ok"
 )
 { }
