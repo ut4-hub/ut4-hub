@@ -39,6 +39,11 @@
       inherit pkgs;
       masterServerDomain = "master-ut4.timiimit.com";
     };
+
+    # 6. ut4-client composes everything.
+    client = import ../pkgs/ut4-client.nix {
+      inherit pkgs ut4Base ut4UU engineIni launcher;
+    };
   in
   assert fetchOrasResult.outputHash == "0000000000000000000000000000000000000000000000000000";
   # Nix sanitizes colons in derivation names to hyphens.
@@ -48,6 +53,7 @@
   assert ut4UU.name == "ut4uu-v10.1.6";
   assert engineIni.name == "ut4-engine-ini-template";
   assert launcher.name == "ut4-launcher";
+  assert client.name == "ut4-client-xan-3525360";
   "ok"
 )
 { }
