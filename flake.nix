@@ -58,8 +58,9 @@
             launcher
             ;
         };
+        ut4ServerBase = import ./pkgs/ut4-server-base.nix { inherit pkgs; };
         ut4Server = import ./pkgs/ut4-server.nix {
-          inherit pkgs ut4Base;
+          inherit pkgs ut4ServerBase;
         };
       in
       {

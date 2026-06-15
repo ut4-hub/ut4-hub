@@ -1,10 +1,15 @@
-# ut4-server: the dedicated-server side. The client install already contains
-# Engine/Binaries/Linux/UE4Server-Linux-Shipping, so this reuses ut4-base and
-# just provides a different launch entry point.
+# ut4-server: dedicated-server package. Composes the server-base install
+# (separately fetched from archive.org via ut4-server-base, NOT a reuse of
+# the client zip) with a launcher wrapper that invokes
+# UE4Server-Linux-Shipping under steam-run.
 #
-# The NixOS module (services.ut4Hub) sets GAME_ROOT for the systemd unit; this
-# package on its own is rarely invoked directly.
-{ pkgs, ut4Base }:
+# Earlier this file reused ut4-base, on the assumption that the client zip
+# also shipped UE4Server-Linux-Shipping. Empirically it doesn't — the
+# server is a separate ~870MB archive.org artifact, and the extracted
+# directory is LinuxServer/ (not LinuxNoEditor/).
+#
+# GAME_ROOT must be set by the caller (the services.ut4Hub module does this).
+{ pkgs, ut4ServerBase }:
 let
   serverLauncher = pkgs.writeShellApplication {
     name = "ut4-server";
@@ -13,7 +18,7 @@ let
       set -euo pipefail
       : "''${GAME_ROOT:?GAME_ROOT not set; the services.ut4Hub module sets it}"
 
-      GAME="''${GAME_ROOT}/LinuxNoEditor"
+      GAME="''${GAME_ROOT}/LinuxServer"
       BIN="''${GAME}/Engine/Binaries/Linux/UE4Server-Linux-Shipping"
       if [[ ! -x "''${BIN}" ]]; then
         echo "UT4 server binary missing or non-executable: ''${BIN}" >&2
@@ -30,7 +35,7 @@ in
 pkgs.symlinkJoin {
   name = "ut4-server-xan-3525360";
   paths = [
-    ut4Base
+    ut4ServerBase
     serverLauncher
   ];
 
