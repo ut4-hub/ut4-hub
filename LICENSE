@@ -23,7 +23,8 @@ SOFTWARE.
 ---
 
 NOTE: This license covers only the Nix code in this repository. The Unreal
-Tournament 4 game assets fetched by this flake remain the property of Epic
-Games, Inc. and are not redistributed under this license. The flake points at
-publicly-archived community mirrors (archive.org); if you are a rights-holder
-and want them removed, contact dmca@ut4-hub.example.
+Tournament 4 game assets fetched by this flake are mirrored from the
+publicly-archived UT4 pre-alpha on archive.org for faster downloads; their
+sha256 matches archive.org's canonical artifact bit-for-bit. Those assets
+remain the property of Epic Games, Inc. and are not redistributed under
+this license.

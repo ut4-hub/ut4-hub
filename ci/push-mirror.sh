@@ -55,7 +55,7 @@ oras push "${REGISTRY}:${TAG}" \
   --annotation "io.ut4-hub.upstream.url=${UPSTREAM_URL}" \
   --annotation "io.ut4-hub.upstream.sha256=${EXPECTED_SHA256}" \
   --annotation "io.ut4-hub.upstream.fetched-at=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-  --annotation "io.ut4-hub.purpose=Public mirror of community-archived UT4 pre-alpha (Epic Games, abandoned 2018). Takedown: dmca@ut4-hub.example." \
+  --annotation "io.ut4-hub.purpose=Faster mirror of the archive.org-hosted UT4 pre-alpha (same sha256 as upstream)." \
   part-*
 popd >/dev/null
 

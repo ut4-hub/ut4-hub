@@ -42,7 +42,7 @@ wrapper at the join's own output path. Same fix applied in `ut4-client-no-uu`.
 |-----------|------|-------------|
 | 17 | Fill in real upstream sha256 in `pkgs/ut4-base.nix` | Requires the 11 GB archive.org download (`nix-prefetch-url`, ~1–2h). Heavy bandwidth — declined to run autonomously. **Easy step 1 when you return.** |
 | 18 | Integration build of `ut4-client` (smoke test) | Same 11 GB download + ~25 GB free disk. Once Task 17 is done, run `nix build .#ut4-client -L` to validate end-to-end. |
-| 20 | Publish to GitHub + Flakehub | Needs your GitHub auth and judgment calls (repo visibility, branch protection, DMCA contact). |
+| 20 | Publish to GitHub + Flakehub | Needs your GitHub auth and judgment calls (repo visibility, branch protection). |
 
 ### To pick up where this left off
 
@@ -67,13 +67,7 @@ wrapper at the join's own output path. Same fix applied in `ut4-client-no-uu`.
    ./result/bin/ut4
    ```
 
-3. **Replace the DMCA placeholder** in `README.md` and `LICENSE`:
-   ```bash
-   sed -i 's|dmca@ut4-hub.example|YOUR_REAL_EMAIL|g' README.md LICENSE
-   git -c commit.gpgsign=false commit -am "docs: set DMCA contact"
-   ```
-
-4. **Create the GitHub repo and push:**
+3. **Create the GitHub repo and push:**
    ```bash
    gh repo create ut4-hub/ut4-hub --public \
      --description "NixOS flake for Unreal Tournament 4 pre-alpha (Linux, XAN-3525360)"
@@ -81,11 +75,11 @@ wrapper at the join's own output path. Same fix applied in `ut4-client-no-uu`.
    git push -u origin main
    ```
 
-5. **Run the mirror workflow once manually** in GitHub Actions, wait ~1–2h
+4. **Run the mirror workflow once manually** in GitHub Actions, wait ~1–2h
    for the chunked ORAS push to complete. Subsequent `ut4-base` builds will
    pull from `ghcr.io/ut4-hub/client:xan-3525360` instead of archive.org.
 
-6. **Tag a release and submit to Flakehub:**
+5. **Tag a release and submit to Flakehub:**
    ```bash
    git tag v0.1.0
    git push origin v0.1.0
@@ -103,8 +97,6 @@ wrapper at the join's own output path. Same fix applied in `ut4-client-no-uu`.
 
 ## Open questions for you
 
-- Confirm `dmca@ut4-hub.example` placeholder → real address. Suggest
-  `dmca@<your-domain>` with an alias.
 - Confirm `master-ut4.timiimit.com` as the default master server (currently
   hardcoded in `flake.nix`). Anyone wanting their own master server can
   override via the module option or by overlaying the launcher derivation.

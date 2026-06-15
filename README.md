@@ -69,21 +69,18 @@ sops.secrets.ut4-hub-token = {
 
 Get the token by registering a hub at <https://ut4.timiimit.com>.
 
-## Provenance & legal
+## Provenance
 
-UT4 pre-alpha was an Epic Games project that was effectively abandoned in
-2018. The cooked binaries were never explicitly licensed for redistribution.
-This project relies on archive.org's long-standing community hosting and
-Epic's de-facto tolerance.
+The base game pak is a bit-for-bit copy of the publicly-archived
+[UT4 pre-alpha on archive.org](https://archive.org/details/unreal-tournament-4-pre-alpha).
+The GHCR mirror at `ghcr.io/ut4-hub/client:xan-3525360` exists purely for
+faster downloads — the sha256 pinned in `flake.nix` matches archive.org's,
+and the flake falls back to archive.org automatically if the mirror is
+unavailable.
 
-- **Upstream canonical source:** <https://archive.org/details/unreal-tournament-4-pre-alpha>
-- **GHCR mirror** (bit-for-bit identical, for cache locality): `ghcr.io/ut4-hub/client:xan-3525360`
-- **DMCA / takedown contact:** `dmca@ut4-hub.example` ← **must be replaced with a real address before this repo is publicly announced**
-- **License of this flake:** MIT (does **not** extend to Epic's assets)
-
-If you're at Epic and want this taken down, please reach out via the contact
-above; the flake is built to fall through to archive.org automatically so end
-users won't notice.
+License of this flake: MIT. The license covers only the Nix code in this
+repository — game assets remain Epic's IP and are fetched, not redistributed
+under our license.
 
 ## Acknowledgments
 
