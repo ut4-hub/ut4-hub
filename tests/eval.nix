@@ -44,6 +44,16 @@
     client = import ../pkgs/ut4-client.nix {
       inherit pkgs ut4Base ut4UU engineIni launcher;
     };
+
+    # 7. ut4-client-no-uu composes everything minus the UT4UU layer.
+    clientNoUU = import ../pkgs/ut4-client-no-uu.nix {
+      inherit pkgs ut4Base engineIni launcher;
+    };
+
+    # 8. ut4-server (server-side launcher composed with ut4-base).
+    server = import ../pkgs/ut4-server.nix {
+      inherit pkgs ut4Base;
+    };
   in
   assert fetchOrasResult.outputHash == "0000000000000000000000000000000000000000000000000000";
   # Nix sanitizes colons in derivation names to hyphens.
@@ -54,6 +64,8 @@
   assert engineIni.name == "ut4-engine-ini-template";
   assert launcher.name == "ut4-launcher";
   assert client.name == "ut4-client-xan-3525360";
+  assert clientNoUU.name == "ut4-client-no-uu-xan-3525360";
+  assert server.name == "ut4-server-xan-3525360";
   "ok"
 )
 { }
