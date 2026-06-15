@@ -1,0 +1,37 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build release notes
+        run: |
+          prev_tag=$(git tag --sort=-creatordate | sed -n '2p')
+          if [[ -n "$prev_tag" ]]; then
+            range="${prev_tag}..${GITHUB_REF_NAME}"
+          else
+            range="${GITHUB_REF_NAME}"
+          fi
+          {
+            echo "## Changes in ${GITHUB_REF_NAME}"
+            echo
+            git log --no-merges --pretty=format:"- %s" "$range"
+          } > notes.md
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "ut4-hub ${GITHUB_REF_NAME}" \
+            --notes-file notes.md

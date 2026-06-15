@@ -1,0 +1,42 @@
+name: Mirror archive.org → GHCR
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Mondays 06:00 UTC
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ORAS
+        run: |
+          curl -fLo /tmp/oras.tgz \
+            "https://github.com/oras-project/oras/releases/download/v1.2.0/oras_1.2.0_linux_amd64.tar.gz"
+          mkdir -p "$HOME/bin"
+          tar -xzf /tmp/oras.tgz -C "$HOME/bin" oras
+          chmod +x "$HOME/bin/oras"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+      - name: Read pinned sha256 from pkgs/ut4-base.nix
+        id: hash
+        run: |
+          # The line looks like:
+          #   upstreamSha256 = "<hex>";
+          h=$(grep -oP 'upstreamSha256\s*=\s*"\K[^"]+' pkgs/ut4-base.nix)
+          if [[ -z "$h" || "$h" == "0000000000000000000000000000000000000000000000000000" ]]; then
+            echo "upstreamSha256 in pkgs/ut4-base.nix is not pinned; fill it in first." >&2
+            exit 1
+          fi
+          echo "sha=$h" >> "$GITHUB_OUTPUT"
+      - name: Run mirror push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          EXPECTED_SHA256: ${{ steps.hash.outputs.sha }}
+        run: ./ci/push-mirror.sh
