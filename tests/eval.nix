@@ -24,12 +24,16 @@
       inherit pkgs;
       inherit fetchOras;
     };
+
+    # 3. ut4-ut4uu derivation evaluates with expected name.
+    ut4UU = import ../pkgs/ut4-ut4uu.nix { inherit pkgs; };
   in
   assert fetchOrasResult.outputHash == "0000000000000000000000000000000000000000000000000000";
   # Nix sanitizes colons in derivation names to hyphens.
   assert fetchOrasResult.name == "fetchOras-test-latest";
   assert ut4Base.name == "ut4-base-xan-3525360";
   assert ut4Base.passthru.build == "xan-3525360";
+  assert ut4UU.name == "ut4uu-v10.1.6";
   "ok"
 )
 { }
